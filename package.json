@@ -8,9 +8,15 @@
   },
   "dependencies": {
     "express": "~4.9.x",
+    "lodash": "~2.4.x",
     "mongodb": "~1.4.x",
     "mongoose": "~3.8.x",
-    "shapefile": "~0.3.x"
+    "shapefile": "~0.3.x",
+    "shapefile-stream": "~0.0.x",
+    "through2": "~0.6.x"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.5"
   },
   "engines": {
     "node": "0.10.x"
