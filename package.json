@@ -1,25 +1,37 @@
 {
-  "name": "node-js-getting-started",
-  "version": "0.1.2",
-  "description": "A sample Node.js app using Express 4",
+  "name": "topoli",
+  "version": "0.1.0",
+  "description": "Visualizing Toronto's open data",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node app.js"
   },
   "dependencies": {
-    "express": "~4.9.x"
+    "express": "~4.9.x",
+    "mongodb": "~1.4.x",
+    "mongoose": "~3.8.x",
+    "shapefile": "~0.3.x"
   },
   "engines": {
     "node": "0.10.x"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/heroku/node-js-getting-started"
+    "url": "https://github.com/abmohan/topoli"
   },
   "keywords": [
+    "choropleth",
+    "data",
+    "election",
+    "map",
     "node",
     "heroku",
-    "express"
+    "express",
+    "ontario",
+    "politics",
+    "shapefile",
+    "toronto",
+    "canada"
   ],
-  "license": "MIT"
+  "license": "Apache 2.0"
 }
