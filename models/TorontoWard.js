@@ -15,7 +15,7 @@ var torontoWardSchema = new mongoose.Schema({
     longCodeName: String // ward number and community council area it is in (N, S, E or W)
   },
 
-  loc: {type: Object, index: '2dsphere'}  // polygon geocordinates
+  geometry: {type: Object, index: '2dsphere'}  // polygon geocordinates
 
 });
 

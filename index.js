@@ -28,6 +28,12 @@ app.get('/', function (req, res) {
   res.sendfile('./public/index.html');
 });
 
+app.get('/public/app.js', function (req, res) {
+  console.log("Request received at '/'", req.headers);
+  res.sendfile('./public/app.js');
+});
+
+
 app.get('/api', function (req, res) {
   console.log("Request received at '/api'", req.headers);
   res.send("topoli API running.");
@@ -39,10 +45,10 @@ app.get('/api/wards', function (req, res) {
 
   TorontoWard.find(function (err, wards) {
     if (err) {
+      console.log(err);
       res.send(err);
     }
-
-    res.json(wards);
+    res.send({ type: "FeatureCollection", features: wards });
   });
 
 });
