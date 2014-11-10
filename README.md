@@ -2,14 +2,14 @@
 
 Visualizing Toronto's open data
 
-This is one of my first complete node.js projects and is deployed at http://topoli.herokuapp.com. 
+This is one of my first complete node.js projects and will be deployed at http://topoli.herokuapp.com. 
 
 This repo is based on a clone of [Heroku's Node.js starter repo](https://github.com/heroku/node-js-getting-started).
 
 Feel free to suggest improvements, request additions or submit contributions.
  
 You may contact me at:
-- Twitter: @abmohan
+- Twitter: @ashwinbalamohan
 - Email: abmohan [at] gmail
 
 # Tech stack
