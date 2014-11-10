@@ -4,7 +4,7 @@
   "description": "Visualizing Toronto's open data",
   "main": "index.js",
   "scripts": {
-    "start": "node app.js"
+    "start": "node index.js"
   },
   "dependencies": {
     "express": "~4.9.x",

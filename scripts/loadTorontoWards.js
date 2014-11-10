@@ -31,7 +31,7 @@ function loadTorontoWards(filename, year) {
           year: year,
           type: data.type,
           properties: {},
-          loc: data.geometry
+          geometry: data.geometry
         };
 
         _.keys(propertyMapping).forEach(function (key) {
