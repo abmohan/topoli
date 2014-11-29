@@ -2,9 +2,9 @@
 
 Visualizing Toronto's open data
 
-This is one of my first complete node.js projects and will be deployed at http://topoli.herokuapp.com. 
+This is one of my first complete node.js projects and will be deployed at [http://topoli.herokuapp.com](http://topoli.herokuapp.com). 
 
-This repo is based on a clone of [Heroku's Node.js starter repo](https://github.com/heroku/node-js-getting-started).
+This repo is based on a clone of [Heroku's Node.js starter repo](https://github.com/heroku/node-js-getting-started) as well as [a MEAN stack a tutorial](http://scotch.io/bar-talk/setting-up-a-mean-stack-single-page-application) by [scotch.io](http://scotch.io/).
 
 Feel free to suggest improvements, request additions or submit contributions.
  
@@ -15,7 +15,7 @@ You may contact me at:
 # Tech stack
 - Node.js + Express
 - MongoDB + Mongoose
-- AngularJS, D3
+- AngularJS, D3, Bootstrap
 
 ## Versions
 

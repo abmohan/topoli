@@ -1,0 +1,13 @@
+{
+  "name": "topoli",
+  "version": "0.1.0",
+  "dependencies": {
+      "angular": "latest",
+      "angular-route": "latest",
+      "angular-bootstrap": "latest",
+      "animate.css": "latest",
+      "bootstrap": "latest",
+      "d3": "latest",
+      "font-awesome": "latest"
+  }
+}

@@ -2,21 +2,24 @@
   "name": "topoli",
   "version": "0.1.0",
   "description": "Visualizing Toronto's open data",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node app.js",
+    "postinstall": "bower install"
   },
   "dependencies": {
+    "async": "~0.9.x",
+    "body-parser": "~1.9.x",
     "express": "~4.9.x",
     "lodash": "~2.4.x",
-    "mongodb": "~1.4.x",
-    "mongoose": "~3.8.x",
-    "shapefile": "~0.3.x",
-    "shapefile-stream": "~0.0.x",
-    "through2": "~0.6.x"
+    "method-override": "~2.3.x",
+    "mongoose": "~3.8.x"
   },
   "devDependencies": {
-    "grunt": "~0.4.5"
+    "excel-parser": "~0.2.x",
+    "grunt": "~0.4.5",
+    "grunt-cli": "~0.1.x",
+    "shapefile": "~0.3.x"
   },
   "engines": {
     "node": "0.10.x"
