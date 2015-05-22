@@ -2,9 +2,9 @@
   "name": "topoli",
   "version": "0.0.1",
   "description": "Visualizing Toronto's political data",
-  "main": "index.js",
+  "main": "server/index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "node server/index.js",
     "test": "gulp test"
   },
   "engines": {
