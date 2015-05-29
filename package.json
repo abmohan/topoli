@@ -4,8 +4,9 @@
   "description": "Visualizing Toronto's political data",
   "main": "server/index.js",
   "scripts": {
-    "start": "node server/index.js",
-    "test": "gulp test"
+    "test": "gulp test",
+    "postinstall": "node_modules/bower/bin/bower install && node node_modules/gulp/bin/gulp.js build",
+    "start": "node server/index.js"
   },
   "engines": {
     "node": "0.12.2"
@@ -29,6 +30,26 @@
   },
   "homepage": "https://github.com/abmohan/topoli",
   "dependencies": {
-    "express": "^4.12.4"
+    "bluebird": "^2.9.26",
+    "bower": "^1.4.1",
+    "express": "^4.12.4",
+    "gulp": "^3.8.11",
+    "gulp-eslint": "^0.12.0",
+    "gulp-inject": "^1.2.0",
+    "gulp-watch": "^4.2.4",
+    "moment": "^2.10.3",
+    "mongoose": "^4.0.3",
+    "ramda": "^0.14.0",
+    "rekuire": "^0.1.9"
+  },
+  "devDependencies": {
+    "chai": "^2.3.0",
+    "chai-as-promised": "^5.0.0",
+    "excel-parser": "^0.2.2",
+    "karma": "^0.12.32",
+    "karma-chai": "^0.1.0",
+    "karma-mocha": "^0.1.10",
+    "mocha": "^2.2.5",
+    "shapefile": "^0.3.0"
   }
 }
