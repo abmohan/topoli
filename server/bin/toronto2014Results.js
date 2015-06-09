@@ -24,7 +24,7 @@ function getWorksheets(fileArray) {
   return bluebird.map(fileArray, getWorkbook)
       .map(getRawWorksheetArray)
       .then(function (results) {
-        return R.flatten(results);
+        return bluebird.resolve(R.flatten(results));
       })
       .map(function (result) {
         return csv.parseAsync(result);
@@ -66,32 +66,33 @@ function groupWorksheetPollData(titleRowData, worksheetCols) {
   var candidates = worksheetCols[0].slice(2);
   var pollDataArray =  worksheetCols.slice(1);
 
-  return bluebird.reduce(pollDataArray, function (mappedPollData, pollData) {
+  return Promise.resolve(
+    R.reduce(function (mappedPollData, pollData) {
 
-    var pollNum = parseInt(pollData[1]);
-    var resultsArray = R.map(function (result) {
-        return parseInt(result);
-      }, pollData.slice(2));
+      var pollNum = parseInt(pollData[1]);
+      var resultsArray = R.map(function (result) {
+          return parseInt(result);
+        }, pollData.slice(2));
 
-    var key = `w${wardNum}p${pollNum}`;
-    mappedPollData[key] = {
-      office: office,
-      year: year,
-      wardNum: wardNum,
-      pollNum: pollNum,
-      voteCounts: R.zipWith(function (candidate, votes) {
-        return {
-            candidate: candidate,
-            votes: votes
-          };
-        }, candidates, resultsArray)
-    };
+      var key = `w${wardNum}p${pollNum}`;
+      mappedPollData[key] = {
+        office: office,
+        year: year,
+        wardNum: wardNum,
+        pollNum: pollNum,
+        voteCounts: R.zipWith(function (candidate, votes) {
+          return {
+              candidate: candidate,
+              votes: votes
+            };
+          }, candidates, resultsArray)
+      };
 
-    return mappedPollData;
+      return mappedPollData;
 
-  }, {});
+    }, {}, pollDataArray)
 
-
+  );
 
 }
 
@@ -103,27 +104,16 @@ function parseWorksheetData(worksheetData) {
     );
 }
 
-function mergeWorksheets(electionResults, parsedWorksheetArray) {
-
-    return bluebird.each(R.keys(parsedWorksheetArray), function (pollID) {
-
-      var pollResult = parsedWorksheetArray[pollID];
-
-      if (!electionResults[pollID]) {
-        electionResults[pollID] = [pollResult];
-      }
-      else {
-        electionResults[pollID].push(pollResult);
-      }
-
-  });
-
+function mergeWorksheets(parsedWorksheetArray) {
+  return Promise.resolve(
+    R.mergeAll(parsedWorksheetArray)
+  );
 }
 
 function getAll() {
   return getWorksheets(filesToImport)
     .map(parseWorksheetData)
-    .reduce(mergeWorksheets)
+    .then(mergeWorksheets)
     .catch(function (err) {
       console.error("Error retrieving Toronto 2014 results", err);
     });
