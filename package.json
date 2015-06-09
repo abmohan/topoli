@@ -1,0 +1,22 @@
+{
+  "name": "topoli_new",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "bluebird": "^2.9.26",
+    "csv": "^0.4.2",
+    "csv-parse": "^0.1.2",
+    "express": "^4.12.4",
+    "mongoose": "^4.0.4",
+    "ramda": "^0.14.0",
+    "shapefile": "^0.3.0",
+    "xlsx": "^0.8.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
