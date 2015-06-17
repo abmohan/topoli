@@ -3,50 +3,61 @@ const csv         = bluebird.promisifyAll(require('csv'));
 const R           = require('ramda');
 const xlsx        = require('xlsx');
 
+const excelTools  = require('./excelTools');
+
 const filesToImport = [
   '../data/results/Toronto/2014/MAYOR.xls',
   '../data/results/Toronto/2014/COUNCILLOR.xls'
 ];
 const year = 2014;
 
-function getWorkbook(filename) {
-  return bluebird.resolve(xlsx.readFile(filename));
+
+module.exports.getAll = getAll;
+
+function getAll() {
+  return excelTools.getWorksheets(filesToImport, flatten=true, verbose=true)
+    .then(function (result) {
+      return result;
+    })
+    .map(parseWorksheetData)
+    .then(R.flatten);
+
 }
 
-function getRawWorksheetArray(wb) {
-  return wb.SheetNames.map(function (wsName) {
-    return bluebird.resolve(xlsx.utils.sheet_to_csv(wb.Sheets[wsName]));
-  });
+function parseWorksheetData(worksheetData) {
+  return bluebird.join(
+      parseTitleRow(worksheetData[0][0]),
+      transposeWorksheetData(worksheetData),
+      groupWorksheetPollData
+    );
 }
 
-function getWorksheets(fileArray) {
-
-  return bluebird.map(fileArray, getWorkbook)
-      .map(getRawWorksheetArray)
-      .then(function (results) {
-        return bluebird.resolve(R.flatten(results));
-      })
-      .map(function (result) {
-        return csv.parseAsync(result);
-      });
-}
-
+/*
+ * Takes the title row of a spreadsheet from the Toronto2014 results and returns
+ * a promise which resolves to an object with keys `office` and `wardNum`.
+ */
 function parseTitleRow(titleRow) {
   var regex = /.*:\s+(\w*).*Ward:\s+(\S*)/i;
 
   var matches = titleRow.match(regex);
 
   if (matches) {
-    return Promise.resolve({office: matches[1].trim(), wardNum: parseInt(matches[2])});
+    return bluebird.resolve(
+      {
+        office: matches[1].trim(),
+        wardNum: parseInt(matches[2])
+      }
+    );
+
   } else {
-    return Promise.reject("Error parsing title row " + titleRow);
+    return bluebird.reject("Error parsing title row " + titleRow);
   }
 
 }
 
 function transposeWorksheetData(worksheetRows) {
 
-  return Promise.resolve(
+  return bluebird.resolve(
 
     // transpose worksheet
     R.map(function (col) {
@@ -59,6 +70,7 @@ function transposeWorksheetData(worksheetRows) {
 
 }
 
+
 function groupWorksheetPollData(titleRowData, worksheetCols) {
   var wardNum = titleRowData.wardNum;
   var office = titleRowData.office;
@@ -66,58 +78,31 @@ function groupWorksheetPollData(titleRowData, worksheetCols) {
   var candidates = worksheetCols[0].slice(2);
   var pollDataArray =  worksheetCols.slice(1);
 
-  return Promise.resolve(
-    R.reduce(function (mappedPollData, pollData) {
+  return bluebird.map(pollDataArray, function (pollData) {
 
-      var pollNum = parseInt(pollData[1]);
-      var resultsArray = R.map(function (result) {
-          return parseInt(result);
-        }, pollData.slice(2));
+    var pollNum = parseInt(pollData[1]);
 
-      var key = `w${wardNum}p${pollNum}`;
-      mappedPollData[key] = {
-        office: office,
-        year: year,
-        wardNum: wardNum,
-        pollNum: pollNum,
-        voteCounts: R.zipWith(function (candidate, votes) {
-          return {
-              candidate: candidate,
-              votes: votes
-            };
-          }, candidates, resultsArray)
-      };
+    var resultsArray = R.map(function (result) {
+        return parseInt(result);
+      }, pollData.slice(2));
 
-      return mappedPollData;
+    var voteCount = R.zipWith(function (candidate, votes) {
+      return {
+          candidate: candidate,
+          votes: votes
+        };
+      }, candidates, resultsArray);
 
-    }, {}, pollDataArray)
+    return {
+      office: office,
+      year: year,
+      wardNum: wardNum,
+      pollNum: pollNum,
+      voteCounts: voteCount
+    };
 
-  );
+    return mappedPollData;
+
+  });
 
 }
-
-function parseWorksheetData(worksheetData) {
-  return bluebird.join(
-      parseTitleRow(worksheetData[0][0]),
-      transposeWorksheetData(worksheetData),
-      groupWorksheetPollData
-    );
-}
-
-function mergeWorksheets(parsedWorksheetArray) {
-  return Promise.resolve(
-    R.mergeAll(parsedWorksheetArray)
-  );
-}
-
-function getAll() {
-  return getWorksheets(filesToImport)
-    .map(parseWorksheetData)
-    .then(mergeWorksheets)
-    .catch(function (err) {
-      console.error("Error retrieving Toronto 2014 results", err);
-    });
-}
-
-
-module.exports.getAll = getAll;

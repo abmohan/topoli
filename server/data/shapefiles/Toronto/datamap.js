@@ -1,26 +1,37 @@
-const path = require('path');
+const path      = require('path');
+const constants = require('../../../config/constants');
 
+function getTitleCase(text) {
+  return text
+    .toLowerCase()
+    .split(' ')
+    .map(function (text) {
+      return text[0].toUpperCase() + text.substring(1);
+    })
+    .join(" ");
+}
 
 var datamap = [
   {
     year: 2014,
     jurisdiction: 'Toronto',
-    entity: 'polling_station',
+    entity: constants.GEO_ENTITIES.TORONTO.VOTING_LOCATION,
+    entityType: constants.GEO_ENTITY_TYPES.MICRO,
     filename: path.join(__dirname,
-      './polling_stations/2014/VOTING_LOCATION_2014_WGS84.shp'),
+      './voting_locations/2014/VOTING_LOCATION_2014_WGS84.shp'),
     propertyMap: {
       electionDate: function () {
         return '2014-10-27';
       },
-      pollNumber: function (rawFeature) { // poll number, parsed to integer
+      pollName: 'POINT_NAME', // Voting location name
+      pollNum: function (rawFeature) { // poll number, parsed to integer
         return parseInt(rawFeature['PT_SHRT_CD']);
       },
-      pollName: 'POINT_NAME', // Voting location name
       pollAddress: 'ADD_FULL', // street address
 
       pollType: 'FEAT_CD', // P or S (primary or secondary)
 
-      pollLongCode: 'PT_LNG_CD',
+      longCode: 'PT_LNG_CD',
 
       wardNum: function (rawFeature) {  // first two digits of long code
         return parseInt(rawFeature['PT_LNG_CD'].slice(0, 2));
@@ -28,25 +39,142 @@ var datamap = [
 
       results: function () {
         return [];
+      },
+
+      pollArea: function() {  // will be filled in at runtime
+        return undefined;
       }
+
+    }
+  },
+
+  {
+    year: 2014,
+    jurisdiction: 'Toronto',
+    entity: constants.GEO_ENTITIES.TORONTO.CITY_POLL,
+    entityType: constants.GEO_ENTITY_TYPES.MICRO,
+    filename: path.join(__dirname,
+      './city_polls/2014/VOTING_SUBDIVISION_2014_WGS84.shp'),
+    propertyMap: {
+      electionDate: function () {
+        return '2014-10-27';
+      },
+
+      pollNum: function (rawFeature) { // Poll Number
+          return parseInt(rawFeature['AREA_SHORT']);
+      },
+      pollName: 'AREA_NAME', // Name of the poll
+
+      wardNum: function (rawFeature) { // the ward number
+        return parseInt(rawFeature['AREA_LONG'].slice(0,2));
+      },
+
+      torontoAreaID: 'AREA_ID' // City of Toronto unique geographic identifier
     }
   },
 
   {
     year: 2010,
     jurisdiction: 'Toronto',
-    entity: 'city_ward',
+    entity: constants.GEO_ENTITIES.TORONTO.CITY_WARD,
+    entityType: constants.GEO_ENTITY_TYPES.MACRO,
     filename: path.join(__dirname,
       './city_wards/2010/icitw_wgs84.shp'),
     propertyMap: {
-      number: 'SCODE_NAME', // Ward Number
-      name: 'NAME', // Name of the Ward with corresponding ward number
 
-      featureCode: 'LCODE_NAME', // Ward Number + community council (N,S, E, W)
+      year: function () {
+        return 2010;
+      },
+
+      jurisdiction: function () {
+        return 'Toronto';
+      },
+
+      entity: function () {
+        return constants.GEO_ENTITIES.TORONTO.CITY_WARD;
+      },
+
+      wardNum: 'SCODE_NAME', // Ward Number
+      wardName: 'NAME', // Name of the Ward with corresponding ward number
+
+      longCode: 'LCODE_NAME', // Ward Number + community council (N,S, E, W)
 
       torontoGeoID: 'GEO_ID', // unique geographic identifier
       torontoTypeDesc: 'TYPE_DESC', // Ward
       torontoTypeCode: 'TYPE_CODE' // City Ward
+    }
+
+  },
+
+  {
+    year: 2010,
+    jurisdiction: 'Toronto',
+    entity: constants.GEO_ENTITIES.TORONTO.NEIGHBOURHOOD,
+    entityType: constants.GEO_ENTITY_TYPES.MACRO,
+    filename: path.join(__dirname,
+      './neighbourhoods/2014/NEIGHBORHOODS_WGS84.shp'),
+    propertyMap: {
+
+      year: function () {
+        return 2010;
+      },
+
+      jurisdiction: function () {
+        return 'Toronto';
+      },
+
+      entity: function () {
+        return constants.GEO_ENTITIES.TORONTO.NEIGHBOURHOOD;
+      },
+
+      name: function (rawFeature) { // neighbourhood name
+
+        var rawName = rawFeature['AREA_NAME']
+
+        // filter out the parenthesised numbers at end of neighourhood name
+        var trailingParenthesesRegex = /^.*?(?=\s\()/;
+        var matches = rawName.match(/^.*?(?=\s\()/);
+
+        // return the match if it exists. otherwise return the raw name
+        return matches ? matches[0] : rawName;
+      },
+
+      longName: 'AREA_NAME', // full neighourhood name (including parentheses)
+
+      number: function (rawFeature) { // area short code
+        return parseInt(rawFeature['AREA_S_CD']);
+      }
+    }
+
+  },
+
+  {
+    year: 2014,
+    jurisdiction: 'Toronto',
+    entity: constants.GEO_ENTITIES.TORONTO.FORMER_MUNICIPALITY,
+    entityType: constants.GEO_ENTITY_TYPES.MACRO,
+    filename: path.join(__dirname,
+      './former_municipalities/2014/citygcs_former_municipality_wgs84.shp'),
+    propertyMap: {
+
+      year: function () {
+        return 2014;
+      },
+
+      jurisdiction: function () {
+        return 'Toronto';
+      },
+
+      entity: function () {
+        return constants.GEO_ENTITIES.TORONTO.FORMER_MUNICIPALITY;
+      },
+
+      name: function(rawFeature) { // entity's name, converted to title case
+        return getTitleCase(rawFeature['AREA_NAME']);
+      },
+
+      torontoAreaID: 'AREA_ID' // internal city of Toronto area ID
+
     }
 
   }

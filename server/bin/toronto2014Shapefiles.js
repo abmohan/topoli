@@ -61,6 +61,7 @@ function getFeatureCollection(datasource) {
         year: datasource.year,
         jurisdiction: datasource.jurisdiction,
         entity: datasource.entity,
+        entityType: datasource.entityType,
         features: mappedFeatures
       };
 
@@ -69,7 +70,7 @@ function getFeatureCollection(datasource) {
 
 function getAll() {
 
-  return getShapefileData([shapefileDatasources[0]])
+  return getShapefileData(shapefileDatasources)
     .map(getFeatureCollection);
 
 }
