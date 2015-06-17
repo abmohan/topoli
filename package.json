@@ -1,8 +1,33 @@
 {
-  "name": "topoli_new",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "name": "topoli",
+  "version": "0.0.1",
+  "description": "Visualizing Toronto's political data",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "test": "gulp test"
+  },
+  "engines": {
+    "node": "0.12.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/abmohan/topoli"
+  },
+  "keywords": [
+    "toronto",
+    "political",
+    "data",
+    "map",
+    "geo",
+    "canada"
+  ],
+  "author": "Ashwin Balamohan <abmohan@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/abmohan/topoli/issues"
+  },
+  "homepage": "https://github.com/abmohan/topoli",
   "dependencies": {
     "bluebird": "^2.9.26",
     "csv": "^0.4.2",
@@ -12,11 +37,5 @@
     "ramda": "^0.14.0",
     "shapefile": "^0.3.0",
     "xlsx": "^0.8.0"
-  },
-  "devDependencies": {},
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
-  "license": "ISC"
+  }
 }
