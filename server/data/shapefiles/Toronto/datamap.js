@@ -11,10 +11,10 @@ function getTitleCase(text) {
     .join(" ");
 }
 
-var datamap = [
+const datamap = [
   {
     year: 2014,
-    jurisdiction: 'Toronto',
+    jurisdiction: constants.JURISDICTIONS.TORONTO,
     entity: constants.GEO_ENTITIES.TORONTO.VOTING_LOCATION,
     entityType: constants.GEO_ENTITY_TYPES.MICRO,
     filename: path.join(__dirname,
@@ -23,6 +23,15 @@ var datamap = [
       electionDate: function () {
         return '2014-10-27';
       },
+
+      jurisdiction: function () {
+        return constants.JURISDICTIONS.TORONTO;
+      },
+
+      entity: function () {
+        return constants.GEO_ENTITIES.TORONTO.VOTING_LOCATION;
+      },
+
       pollName: 'POINT_NAME', // Voting location name
       pollNum: function (rawFeature) { // poll number, parsed to integer
         return parseInt(rawFeature['PT_SHRT_CD']);
@@ -50,7 +59,7 @@ var datamap = [
 
   {
     year: 2014,
-    jurisdiction: 'Toronto',
+    jurisdiction: constants.JURISDICTIONS.TORONTO,
     entity: constants.GEO_ENTITIES.TORONTO.CITY_POLL,
     entityType: constants.GEO_ENTITY_TYPES.MICRO,
     filename: path.join(__dirname,
@@ -74,20 +83,20 @@ var datamap = [
   },
 
   {
-    year: 2010,
-    jurisdiction: 'Toronto',
+    year: 2006,
+    jurisdiction: constants.JURISDICTIONS.TORONTO,
     entity: constants.GEO_ENTITIES.TORONTO.CITY_WARD,
     entityType: constants.GEO_ENTITY_TYPES.MACRO,
     filename: path.join(__dirname,
-      './city_wards/2010/icitw_wgs84.shp'),
+      './city_wards/2006/icitw_wgs84.shp'),
     propertyMap: {
 
       year: function () {
-        return 2010;
+        return 2006;
       },
 
       jurisdiction: function () {
-        return 'Toronto';
+        return constants.JURISDICTIONS.TORONTO;
       },
 
       entity: function () {
@@ -95,7 +104,7 @@ var datamap = [
       },
 
       wardNum: 'SCODE_NAME', // Ward Number
-      wardName: 'NAME', // Name of the Ward with corresponding ward number
+      name: 'NAME', // Name of the Ward with corresponding ward number
 
       longCode: 'LCODE_NAME', // Ward Number + community council (N,S, E, W)
 
@@ -107,20 +116,20 @@ var datamap = [
   },
 
   {
-    year: 2010,
-    jurisdiction: 'Toronto',
+    year: 2006,
+    jurisdiction: constants.JURISDICTIONS.TORONTO,
     entity: constants.GEO_ENTITIES.TORONTO.NEIGHBOURHOOD,
     entityType: constants.GEO_ENTITY_TYPES.MACRO,
     filename: path.join(__dirname,
-      './neighbourhoods/2014/NEIGHBORHOODS_WGS84.shp'),
+      './neighbourhoods/2006/NEIGHBORHOODS_WGS84.shp'),
     propertyMap: {
 
       year: function () {
-        return 2010;
+        return 2006;
       },
 
       jurisdiction: function () {
-        return 'Toronto';
+        return constants.JURISDICTIONS.TORONTO;
       },
 
       entity: function () {
@@ -129,11 +138,11 @@ var datamap = [
 
       name: function (rawFeature) { // neighbourhood name
 
-        var rawName = rawFeature['AREA_NAME']
+        const rawName = rawFeature['AREA_NAME']
 
         // filter out the parenthesised numbers at end of neighourhood name
-        var trailingParenthesesRegex = /^.*?(?=\s\()/;
-        var matches = rawName.match(/^.*?(?=\s\()/);
+        const trailingParenthesesRegex = /^.*?(?=\s\()/;
+        const matches = rawName.match(/^.*?(?=\s\()/);
 
         // return the match if it exists. otherwise return the raw name
         return matches ? matches[0] : rawName;
@@ -149,20 +158,20 @@ var datamap = [
   },
 
   {
-    year: 2014,
-    jurisdiction: 'Toronto',
+    year: 2006,
+    jurisdiction: constants.JURISDICTIONS.TORONTO,
     entity: constants.GEO_ENTITIES.TORONTO.FORMER_MUNICIPALITY,
     entityType: constants.GEO_ENTITY_TYPES.MACRO,
     filename: path.join(__dirname,
-      './former_municipalities/2014/citygcs_former_municipality_wgs84.shp'),
+      './former_municipalities/2006/citygcs_former_municipality_wgs84.shp'),
     propertyMap: {
 
       year: function () {
-        return 2014;
+        return 2006;
       },
 
       jurisdiction: function () {
-        return 'Toronto';
+        return constants.JURISDICTIONS.TORONTO;
       },
 
       entity: function () {

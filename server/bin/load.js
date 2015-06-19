@@ -1,10 +1,12 @@
+'use strict';
+
 const bluebird                = require('bluebird');
 const mongoose                = bluebird.promisifyAll(require('mongoose'));
 const R                       = require('ramda');
 const shapefile               = bluebird.promisifyAll(require('shapefile'));
 
 const MicroEntity             = require('../models/MicroEntity');
-// const MacroEntity             = require('../models/MacroEntity');
+const MacroEntity             = require('../models/MacroEntity');
 
 const toronto2014Results      = require('./toronto2014Results');
 const toronto2014Shapefiles   = require('./toronto2014Shapefiles');
@@ -32,7 +34,7 @@ function getElectionResults() {
 }
 
 function getShapefileType(shapefiles, entity) {
-  var votingLocationCriteria = R.propEq('entity', entity);
+  const votingLocationCriteria = R.propEq('entity', entity);
 
   return bluebird.resolve(R.find(votingLocationCriteria, shapefiles))
     .then(function (shapefile) {
@@ -60,7 +62,7 @@ function mergePollData(electionData) {
     electionData,
 
     function(electionResults, pollData) {
-      var pollKey = getPollKey(pollData);
+      const pollKey = getPollKey(pollData);
 
       // append to hashtable array if it exists. otherwise start a new array
       electionResults[pollKey] = R.append(pollData, electionResults[pollKey]);
@@ -106,7 +108,7 @@ function processMicroEntityShapefiles(shapefiles, electionResults) {
   // ---------- Function definitions -----------------
 
   function getCityPollIndex(cityPollIndex, cityPoll) {
-    var pollKey = getPollKey(cityPoll.properties);
+    const pollKey = getPollKey(cityPoll.properties);
     cityPollIndex[pollKey] = cityPoll;
 
     return cityPollIndex;
@@ -117,7 +119,7 @@ function processMicroEntityShapefiles(shapefiles, electionResults) {
 
     return bluebird.map(votingLocations, function(votingLocation) {
 
-      var pollKey = getPollKey(votingLocation.properties);
+      const pollKey = getPollKey(votingLocation.properties);
 
       votingLocation.properties.results = electionResults[pollKey];
       votingLocation.properties.pollArea = cityPollIndex[pollKey];
@@ -147,34 +149,52 @@ function processMacroEntityShapefiles(shapefiles) {
 
 
 function performDBupdate(microEntities, macroEntities) {
-  // console.log('microEntities', (util.inspect(microEntities, {showHidden: false, depth: 4})));
 
   return mongoose.connectAsync(dbUrl)
     .then(function () {
-      console.log("Removing existing documents");
-      return MicroEntity.removeAsync({})
+      console.log("\nRemoving existing microentity documents");
+      return MicroEntity.removeAsync({});
+    })
+
+    .then(function (query) {
+      console.log("Microentity documents removed:", query.result);
+      console.log("\nInserting", microEntities.length,"microentity documents");
+      return MicroEntity.bulkInsertAsync(microEntities);
+    })
+    .then(function () {
+      console.log("Insert success!");
+      console.log("\nRemoving existing macroentity documents");
+      return MacroEntity.removeAsync({});
     })
 
     .then(function (query) {
       console.log("Documents removed:", query.result);
-      console.log("Inserting", microEntities.length,"documents");
+      console.log("\nInserting", macroEntities.length,"macroentity documents");
 
-      return bluebird.resolve(bluebird.promisifyAll(
-        MicroEntity.collection.initializeUnorderedBulkOp()
-      ))
-      .then(function (bulk) {
-        return bluebird.each(microEntities, function (microentity) {
-          bulk.insert(microentity);
-        })
-        .then(function () {
-          return bulk.executeAsync();
-        });
-      });
+      return bluebird.each(macroEntities, function (macroEntity) {
+        process.stdout.write("\tMatching microentities for " +
+          macroEntity.properties.entity + " " +
+          macroEntity.properties.name
+          );
+
+        return MicroEntity.getGeoIntersectionsAsync(macroEntity.geometry)
+          .then(function (microEntities) {
+            console.log(" - ", microEntities.length, "entities added");
+            macroEntity.properties.microEntities = microEntities;
+          });
+      })
+      .then(function (macroEntities) {
+        return MacroEntity.bulkInsertAsync(macroEntities);
+      })
+
     })
     .then(function (query) {
       console.log("Insert success!");
-      console.log("Closing collection");
+      console.log("\nClosing database connection");
       return mongoose.connection.closeAsync();
+    })
+    .catch(function (err) {
+      console.error("An error occurred during the load process:", err);
     });
 
 }

@@ -1,3 +1,5 @@
+'use strict';
+
 const bluebird    = require('bluebird');
 const csv         = bluebird.promisifyAll(require('csv'));
 const R           = require('ramda');

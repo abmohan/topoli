@@ -1,4 +1,10 @@
+'use strict';
+
 module.exports = {
+  JURISDICTIONS: {
+    TORONTO: 'Toronto'
+  },
+
   GEO_ENTITIES: {
     TORONTO: {
       VOTING_LOCATION: 'vote_loc',
@@ -9,6 +15,7 @@ module.exports = {
       FORMER_MUNICIPALITY: 'former_municipality'
     }
   },
+
   GEO_ENTITY_TYPES: {
     MICRO: 'micro',
     MACRO: 'macro'

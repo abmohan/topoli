@@ -1,29 +1,46 @@
+'use strict';
+
 const bluebird = require('bluebird');
 const mongoose = bluebird.promisifyAll(require('mongoose'));
+const extend   = bluebird.promisifyAll(require('mongoose-schema-extend'));
+const R        = require('ramda');
 
+const ShapefileSchema = require('./ShapefileSchema');
 
-var MicroEntity = mongoose.model('MicroEntity', {
- type: {
-   type: String,
-   required: true,
-   default: 'Feature'
- },
+const MicroEntitySchema = ShapefileSchema.extend({});
 
- properties: {
-   type: Object,
-   required: true,
-   default: {}
- },
-
- geometry: {
-   type: Object,
-   index: '2dsphere'
- }
-
+MicroEntitySchema.statics = R.merge(MicroEntitySchema.statics, {
+  getGeoIntersectionsAsync: getGeoIntersectionsAsync
 });
 
+function getGeoIntersectionsAsync(macroGeometry) {
 
-bluebird.promisifyAll(MicroEntity);
-bluebird.promisifyAll(MicroEntity.prototype);
+  const aggregationQuery = [
+    {
+      $match: {
+        geometry: {
+          $geoIntersects: {
+            $geometry: macroGeometry
+          }
+        }
+      }
+    },
+    {
+      $project: {
+        '_id' : 1,
+        'pollName': '$properties.pollName',
+        'year': '$properties.year',
+        'electionDate': '$properties.electionDate',
+        'jurisdiction': '$properties.jurisdiction'
+      }
+    }
+  ];
+
+  return this.aggregateAsync(aggregationQuery);
+
+}
+
+const MicroEntity = mongoose.model('MicroEntity', MicroEntitySchema);
+
 
 module.exports = MicroEntity;

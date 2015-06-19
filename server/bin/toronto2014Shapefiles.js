@@ -1,3 +1,5 @@
+'use strict';
+
 const bluebird              = require('bluebird');
 const shapefile             = bluebird.promisifyAll(require('shapefile'));
 const R                     = require('ramda');
@@ -14,7 +16,7 @@ function getShapefileData(datasource) {
 
 function applyPropertyMap(propertyMap, properties, mappedFeature, propertyMapKey) {
 
-  var propertyMapValue = propertyMap[propertyMapKey];
+  const propertyMapValue = propertyMap[propertyMapKey];
 
   if (typeof propertyMapValue === 'function') {
     mappedFeature[propertyMapKey] = propertyMapValue.call(this, properties);

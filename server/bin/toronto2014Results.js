@@ -1,13 +1,16 @@
+'use strict';
+
 const bluebird    = require('bluebird');
 const csv         = bluebird.promisifyAll(require('csv'));
+const path        = require('path');
 const R           = require('ramda');
 const xlsx        = require('xlsx');
 
 const excelTools  = require('./excelTools');
 
 const filesToImport = [
-  '../data/results/Toronto/2014/MAYOR.xls',
-  '../data/results/Toronto/2014/COUNCILLOR.xls'
+  path.join(__dirname, '../data/results/Toronto/2014/MAYOR.xls'),
+  path.join(__dirname, '../data/results/Toronto/2014/COUNCILLOR.xls')
 ];
 const year = 2014;
 
@@ -15,7 +18,10 @@ const year = 2014;
 module.exports.getAll = getAll;
 
 function getAll() {
-  return excelTools.getWorksheets(filesToImport, flatten=true, verbose=true)
+  const flatten = true;
+  const verbose = true;
+
+  return excelTools.getWorksheets(filesToImport, flatten, verbose)
     .then(function (result) {
       return result;
     })
@@ -37,9 +43,9 @@ function parseWorksheetData(worksheetData) {
  * a promise which resolves to an object with keys `office` and `wardNum`.
  */
 function parseTitleRow(titleRow) {
-  var regex = /.*:\s+(\w*).*Ward:\s+(\S*)/i;
+  const regex = /.*:\s+(\w*).*Ward:\s+(\S*)/i;
 
-  var matches = titleRow.match(regex);
+  const matches = titleRow.match(regex);
 
   if (matches) {
     return bluebird.resolve(
@@ -72,21 +78,21 @@ function transposeWorksheetData(worksheetRows) {
 
 
 function groupWorksheetPollData(titleRowData, worksheetCols) {
-  var wardNum = titleRowData.wardNum;
-  var office = titleRowData.office;
+  const wardNum = titleRowData.wardNum;
+  const office = titleRowData.office;
 
-  var candidates = worksheetCols[0].slice(2);
-  var pollDataArray =  worksheetCols.slice(1);
+  const candidates = worksheetCols[0].slice(2);
+  const pollDataArray =  worksheetCols.slice(1);
 
   return bluebird.map(pollDataArray, function (pollData) {
 
-    var pollNum = parseInt(pollData[1]);
+    const pollNum = parseInt(pollData[1]);
 
-    var resultsArray = R.map(function (result) {
+    const resultsArray = R.map(function (result) {
         return parseInt(result);
       }, pollData.slice(2));
 
-    var voteCount = R.zipWith(function (candidate, votes) {
+    const voteCount = R.zipWith(function (candidate, votes) {
       return {
           candidate: candidate,
           votes: votes
