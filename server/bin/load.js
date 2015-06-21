@@ -10,11 +10,10 @@ const MacroEntity             = require('../models/MacroEntity');
 
 const toronto2014Results      = require('./toronto2014Results');
 const toronto2014Shapefiles   = require('./toronto2014Shapefiles');
-const dbUrl                   = require('../config/db').url;
+const dbUrl                   = require('../config/db').uri;
 const constants               = require('../config/constants');
 
 const util                    = require('util');
-
 
 bluebird.join(
   getShapefiles(),
@@ -152,24 +151,24 @@ function performDBupdate(microEntities, macroEntities) {
 
   return mongoose.connectAsync(dbUrl)
     .then(function () {
-      console.log("\nRemoving existing microentity documents");
+      console.log("\nRemoving existing microEntity documents");
       return MicroEntity.removeAsync({});
     })
 
     .then(function (query) {
       console.log("Microentity documents removed:", query.result);
-      console.log("\nInserting", microEntities.length,"microentity documents");
+      console.log("\nInserting", microEntities.length,"microEntity documents");
       return MicroEntity.bulkInsertAsync(microEntities);
     })
     .then(function () {
       console.log("Insert success!");
-      console.log("\nRemoving existing macroentity documents");
+      console.log("\nRemoving existing macroEntity documents");
       return MacroEntity.removeAsync({});
     })
 
     .then(function (query) {
       console.log("Documents removed:", query.result);
-      console.log("\nInserting", macroEntities.length,"macroentity documents");
+      console.log("\nInserting", macroEntities.length,"macroEntity documents");
 
       return bluebird.each(macroEntities, function (macroEntity) {
         process.stdout.write("\tMatching microentities for " +
@@ -193,8 +192,8 @@ function performDBupdate(microEntities, macroEntities) {
       console.log("\nClosing database connection");
       return mongoose.connection.closeAsync();
     })
-    .catch(function (err) {
-      console.error("An error occurred during the load process:", err);
-    });
+    // .catch(function (err) {
+    //   console.error("An error occurred during the load process:", err);
+    // });
 
 }
