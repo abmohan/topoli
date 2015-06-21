@@ -1,15 +1,21 @@
 'use strict';
 
-const express = require('express');
-const app = express();
+const express     = require('express');
+const mongoose    = require('mongoose');
+const morgan      = require('morgan');
+const path        = require('path');
 
-app.set('port', (process.env.PORT || 5000));
-app.use(express.static(__dirname + '/public'));
+const app         = express();
+const database    = require('./config/db')
+const port        = process.env.PORT || 5000;
 
-app.get('/', function(request, response) {
-  response.send('Hello World!');
-});
+mongoose.connect(database.uri);
 
-app.listen(app.get('port'), function() {
-  console.log('Node app is running on port', app.get('port'));
+app.use(morgan('dev'));
+app.set('publicDir', path.join(__dirname, '../client'));
+
+require('./routes')(app);
+
+app.listen(port, function() {
+  console.log('Node app is running on port', port);
 });

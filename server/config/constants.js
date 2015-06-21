@@ -2,7 +2,7 @@
 
 module.exports = {
   JURISDICTIONS: {
-    TORONTO: 'Toronto'
+    TORONTO: 'TORONTO'
   },
 
   GEO_ENTITIES: {
