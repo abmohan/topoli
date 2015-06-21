@@ -1,6 +1,9 @@
 # Created by https://www.gitignore.io
 
 ### Node ###
+# Packages
+node_modules
+
 # Logs
 logs
 *.log
