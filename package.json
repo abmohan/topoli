@@ -8,7 +8,7 @@
     "test": "gulp test"
   },
   "engines": {
-    "node": "0.12.2"
+    "iojs": "2.5.0"
   },
   "repository": {
     "type": "git",
