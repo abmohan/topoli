@@ -65,7 +65,7 @@ function mergePollData(electionData) {
 
       // append to hashtable array if it exists. otherwise start a new array
       electionResults[pollKey] = R.append(pollData, electionResults[pollKey]);
-      return electionResults
+      return electionResults;
 
     },
 
@@ -139,7 +139,7 @@ function processMacroEntityShapefiles(shapefiles) {
   })
   // get only the features
   .map(function (shapefile) {
-    return shapefile.features
+    return shapefile.features;
   })
   // flatten all features
   .then(R.flatten);
@@ -192,8 +192,8 @@ function performDBupdate(microEntities, macroEntities) {
       console.log("\nClosing database connection");
       return mongoose.connection.closeAsync();
     })
-    // .catch(function (err) {
-    //   console.error("An error occurred during the load process:", err);
-    // });
+    .catch(function (err) {
+      console.error("An error occurred during the load process:", err);
+    });
 
 }
