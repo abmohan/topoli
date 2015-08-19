@@ -4,7 +4,7 @@
   "description": "Visualizing Toronto's political data",
   "main": "server/index.js",
   "scripts": {
-    "start": "node bin/load.js && node server/index.js",
+    "start": "node server/bin/load.js && node server/index.js",
     "test": "gulp test"
   },
   "engines": {
