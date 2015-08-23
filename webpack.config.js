@@ -13,7 +13,7 @@ module.exports = {
     pathinfo: true
   },
   resolve: {
-    extensions: ['', '.jsx', '.es6', '.js', '.scss']
+    extensions: ['', '.jsx', '.js', '.scss']
   },
   devtool: 'source-map',
   plugins: [new HtmlWebpackPlugin({
@@ -22,19 +22,19 @@ module.exports = {
   })],
   module: {
     loaders: [{
-      test: /\.es6$/,
+      test: /\.js$/,
       loader: 'babel',
-      exclude: /node_modules/
+      exclude: /(node_modules|bower_components)/
     },
     {
       test: /\.jsx$/,
       loader: 'jsx!babel',
-      exclude: /node_modules/
+      exclude: /(node_modules|bower_components)/
     },
     {
       test: /\.scss$/,
       loader: 'style!css!sass?sourceMap',
-      exclude: /node_modules/
+      exclude: /(node_modules|bower_components)/
     }]
   }
 };

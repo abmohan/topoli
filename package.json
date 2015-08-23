@@ -4,12 +4,12 @@
   "description": "Visualizing Toronto's political data",
   "main": "server/index.js",
   "scripts": {
-    "postinstall": "node server/bin/load.js && node_modules/webpack/bin/webpack.js",
-    "start": "node server/index.js",
+    "postinstall": "node --harmony server/bin/load.js && node_modules/webpack/bin/webpack.js",
+    "start": "node --harmony server/index.js",
     "test": "gulp test"
   },
   "engines": {
-    "node": "0.12.2"
+    "node": "0.12.x"
   },
   "repository": {
     "type": "git",
