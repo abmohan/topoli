@@ -12,7 +12,7 @@ const port        = process.env.PORT || 5000;
 mongoose.connect(database.uri);
 
 app.use(morgan('dev'));
-app.set('publicDir', path.join(__dirname, '../client'));
+app.set('publicDir', path.join(__dirname, '../dist'));
 
 require('./routes')(app);
 
