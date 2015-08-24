@@ -4,9 +4,8 @@
   "description": "Visualizing Toronto's political data",
   "main": "server/index.js",
   "scripts": {
-    "postinstall": "node --harmony server/bin/load.js && node_modules/webpack/bin/webpack.js",
-    "start": "node --harmony server/index.js",
-    "test": "gulp test"
+    "postinstall": "node server/bin/load.js && node_modules/webpack/bin/webpack.js",
+    "start": "node server/index.js"
   },
   "engines": {
     "iojs": "2.5.x"
