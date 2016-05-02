@@ -1,21 +1,15 @@
-'use strict';
+const express = require('express');
+// const sequelize = require('sequelize');
+const winston = require('winston');
 
-const express     = require('express');
-const mongoose    = require('mongoose');
-const morgan      = require('morgan');
-const path        = require('path');
+const app = express();
+// const dbConfig = require('./config/db');
+const webServerConfig = require('./config/webserver');
 
-const app         = express();
-const database    = require('./config/db')
-const port        = process.env.PORT || 5000;
-
-mongoose.connect(database.uri);
-
-app.use(morgan('dev'));
-app.set('publicDir', path.join(__dirname, '../dist'));
+app.set('publicDir', webServerConfig.publicFolderPath);
 
 require('./routes')(app);
 
-app.listen(port, function() {
-  console.log('Node app is running on port', port);
+app.listen(webServerConfig.port, function cb() {
+  winston.log('TOpoli node app is running on port', webServerConfig.port);
 });

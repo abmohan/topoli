@@ -1,14 +1,19 @@
 {
   "name": "topoli",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Visualizing Toronto's political data",
   "main": "server/index.js",
   "scripts": {
-    "postinstall": "node server/bin/load.js && node_modules/webpack/bin/webpack.js",
-    "start": "node server/index.js"
+    "build": "npm run clean && node node_modules/.bin/webpack",
+    "clean": "rimraf dist",
+    "dev": "node node_modules/.bin/webpack-dev-server --content-base app --hot",
+    "postinstall": "node node_modules/.bin/typings install",
+    "server": "nodemon server --ignore src --ignore node_modules --ignore dist",
+    "start": "npm run build && npm run server",
+    "test": ""
   },
   "engines": {
-    "iojs": "2.5.x"
+    "node": "5.x"
   },
   "repository": {
     "type": "git",
@@ -27,10 +32,6 @@
     {
       "name": "Ashwin Balamohan",
       "email": "abmohan@gmail.com"
-    },
-    {
-      "name": "Seth Davenport",
-      "email": "seth.e.davenport@gmail.com"
     }
   ],
   "license": "ISC",
@@ -39,33 +40,28 @@
   },
   "homepage": "https://github.com/abmohan/topoli",
   "dependencies": {
-    "babel-core": "^5.8.22",
-    "babel-loader": "^5.3.2",
-    "bluebird": "^2.9.26",
-    "css-loader": "^0.16.0",
-    "csv": "^0.4.2",
-    "eslint": "^1.2.0",
-    "eslint-plugin-react": "^3.2.3",
-    "events": "^1.0.2",
-    "express": "^4.12.4",
-    "flux": "^2.1.1",
-    "gulp": "^3.9.0",
-    "gulp-supervisor": "^0.1.2",
-    "html-webpack-plugin": "^1.6.1",
-    "jsx-loader": "^0.13.2",
-    "mongoose": "^4.0.4",
-    "mongoose-schema-extend": "^0.1.7",
-    "morgan": "^1.6.0",
-    "node-libs-browser": "^0.5.2",
-    "node-sass": "^3.2.0",
-    "ramda": "^0.14.0",
-    "react": "^0.13.3",
-    "react-router": "^0.13.3",
-    "sass-loader": "^2.0.1",
-    "shapefile": "^0.3.0",
-    "style-loader": "^0.12.3",
-    "webpack": "^1.11.0",
-    "webpack-dev-server": "^1.10.1",
-    "xlsx": "^0.8.0"
+    "angular2": "^2.0.0-beta.17",
+    "d3": "^3.5.16",
+    "es6-shim": "^0.35.0",
+    "express": "^4.13.4",
+    "reflect-metadata": "^0.1.2",
+    "rxjs": "^5.0.0-beta.6",
+    "sequelize": "^3.22.0",
+    "winston": "^2.2.0",
+    "zone.js": "^0.6.12"
+  },
+  "devDependencies": {
+    "html-webpack-plugin": "^2.16.0",
+    "nodemon": "^1.9.2",
+    "request-promise": "^3.0.0",
+    "rimraf": "^2.5.2",
+    "ts-loader": "^0.8.2",
+    "tslint": "^3.8.1",
+    "tslint-loader": "^2.1.4",
+    "typescript": "^1.8.10",
+    "typings": "^0.8.1",
+    "webpack": "^1.13.0",
+    "webpack-dev-server": "^1.14.1",
+    "webpack-livereload-plugin": "^0.8.1"
   }
 }

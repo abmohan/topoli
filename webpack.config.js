@@ -1,40 +1,35 @@
-'use strict';
-
+var webpack = require('webpack');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
-
+var path = require('path');
 
 module.exports = {
   entry: {
-    'app': './client/app/index.jsx'
+    app: './src/app.ts',
+    vendor: './src/vendor.ts'
   },
   output: {
-    path: 'dist',
-    filename: '/[name]-bundle.js',
-    pathinfo: true
+    path: './dist',
+    filename: 'bundle.js'
   },
+  plugins: [
+    new webpack.optimize.CommonsChunkPlugin('vendor', 'vendor.bundle.js'),
+    new HtmlWebpackPlugin({
+      inject: false,
+      template: './src/index.html'
+    })
+  ],
+
   resolve: {
-    extensions: ['', '.jsx', '.js', '.scss']
+    extensions: ['', '.ts', '.js']
   },
-  devtool: 'source-map',
-  plugins: [new HtmlWebpackPlugin({
-    template: 'client/app/index.html',
-    inject: 'body'
-  })],
+
   module: {
-    loaders: [{
-      test: /\.js$/,
-      loader: 'babel',
-      exclude: /(node_modules|bower_components)/
-    },
-    {
-      test: /\.jsx$/,
-      loader: 'jsx!babel',
-      exclude: /(node_modules|bower_components)/
-    },
-    {
-      test: /\.scss$/,
-      loader: 'style!css!sass?sourceMap',
-      exclude: /(node_modules|bower_components)/
-    }]
+    loaders: [
+      { test: /\.ts$/, loader: 'ts-loader', exclude: /node_modules/ }
+    ]
+  },
+
+  devServer: {
+    historyApiFallback: true
   }
 };

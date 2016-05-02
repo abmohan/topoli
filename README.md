@@ -2,19 +2,7 @@
 
 Visualizing Toronto's political and demographic data.
 
-##### Getting started (OSX): #####
-
-Install mongodb:
-
-```
-brew install mongo
-```
-
-Start mongo
-
-```
-mongod --dbpath ~/mongodata
-```
+##### Getting started #####
 
 Fire up the app
 ```
@@ -25,8 +13,3 @@ npm start
 ##### Contributors: #####
 
 - [Ashwin Balamohan](https://github.com/sethdavenport) [(Twitter)](https://twitter.com/ashwinbalamohan)
-
-
-- [Seth Davenport](https://github.com/sethdavenport)
-- [Josep Sobrepere](https://github.com/josepot)
-- [Nitin Vericherla](https://github.com/electrichead)

@@ -1,7 +1,5 @@
-'use strict';
-
-const localDevUri = 'mongodb://localhost/topoli';
+const localDevUri = '//localhost/topoli';
 
 module.exports = {
-  uri : process.env.MONGOLAB_URI || localDevUri
-}
+  uri: process.env.POSTGRES_URI || localDevUri
+};
